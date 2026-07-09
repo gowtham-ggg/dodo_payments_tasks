@@ -1,0 +1,140 @@
+name: Secure CI/CD Pipeline
+
+on:
+  push:
+    branches: [main, master]
+    paths:
+      - 'task1-hardening/**'
+      - '.github/workflows/ci-cd.yml'
+  pull_request:
+    branches: [main, master]
+
+env:
+  IMAGE_NAME: ghcr.io/${{ github.repository }}/ledger-api
+  APP_DIR: ledger-api-src
+
+permissions:
+  contents: read
+  packages: write
+  id-token: write        # required for Cosign keyless signing
+  security-events: write # required to upload SARIF to the Security tab
+
+jobs:
+  secrets-scan:
+    name: Gitleaks (secrets scan)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Run gitleaks
+        uses: gitleaks/gitleaks-action@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        # Hard block: gitleaks-action fails the job by default on any finding.
+
+  sast:
+    name: Semgrep (SAST)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Checkout app source
+        uses: actions/checkout@v4
+        with:
+          repository: bhabani-dodo/ledger-api-assignment
+          path: ${{ env.APP_DIR }}
+      - name: Run Semgrep
+        run: |
+          pip install semgrep
+          semgrep --config auto --sarif --output semgrep-results.sarif ${{ env.APP_DIR }} || true
+          semgrep --config auto --error ${{ env.APP_DIR }}
+        # --error makes Semgrep exit non-zero (hard block) on ERROR-level findings.
+      - name: Upload SARIF to Security tab
+        if: always()
+        uses: github/codeql-action/upload-sarif@v3
+        with:
+          sarif_file: semgrep-results.sarif
+
+  build-scan-sign:
+    name: Build, scan, sign, attest
+    needs: [secrets-scan, sast]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Checkout app source
+        uses: actions/checkout@v4
+        with:
+          repository: bhabani-dodo/ledger-api-assignment
+          path: ${{ env.APP_DIR }}
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Log in to GHCR
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build image (not pushed yet — scan first)
+        uses: docker/build-push-action@v5
+        with:
+          context: ${{ env.APP_DIR }}/app
+          tags: ${{ env.IMAGE_NAME }}:${{ github.sha }}
+          load: true
+          push: false
+
+      - name: Trivy scan — hard block on fixable CRITICAL
+        uses: aquasecurity/trivy-action@master
+        with:
+          image-ref: ${{ env.IMAGE_NAME }}:${{ github.sha }}
+          format: 'sarif'
+          output: 'trivy-results.sarif'
+          severity: 'CRITICAL'
+          ignore-unfixed: true   # unfixable CVEs warn, don't block — see fail-policy.md
+          exit-code: '1'
+
+      - name: Trivy scan — full report (non-blocking, for visibility)
+        if: always()
+        uses: aquasecurity/trivy-action@master
+        with:
+          image-ref: ${{ env.IMAGE_NAME }}:${{ github.sha }}
+          format: 'table'
+          severity: 'HIGH,CRITICAL'
+          exit-code: '0'
+
+      - name: Upload Trivy SARIF to Security tab
+        if: always()
+        uses: github/codeql-action/upload-sarif@v3
+        with:
+          sarif_file: 'trivy-results.sarif'
+
+      - name: Push image (only reached if scans passed)
+        uses: docker/build-push-action@v5
+        with:
+          context: ${{ env.APP_DIR }}/app
+          tags: ${{ env.IMAGE_NAME }}:${{ github.sha }}
+          push: true
+
+      - name: Install Cosign
+        uses: sigstore/cosign-installer@v3
+
+      - name: Sign image (keyless, OIDC)
+        run: |
+          cosign sign --yes ${{ env.IMAGE_NAME }}:${{ github.sha }}
+
+      - name: Generate SLSA provenance attestation
+        run: |
+          cosign attest --yes \
+            --predicate <(echo '{"buildType":"github-actions","builder":{"id":"${{ github.workflow }}"},"invocation":{"configSource":{"uri":"${{ github.repository }}","digest":{"sha1":"${{ github.sha }}"}}}}') \
+            --type slsaprovenance \
+            ${{ env.IMAGE_NAME }}:${{ github.sha }}
+
+      - name: Verify signature (sanity check)
+        run: |
+          cosign verify \
+            --certificate-identity-regexp "https://github.com/${{ github.repository }}/.*" \
+            --certificate-oidc-issuer https://token.actions.githubusercontent.com \
+            ${{ env.IMAGE_NAME }}:${{ github.sha }}
