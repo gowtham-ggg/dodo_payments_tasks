@@ -12,6 +12,8 @@ spec:
           - resources:
               kinds:
                 - Pod
+              namespaces:
+                - payments
       validate:
         message: "Images must not use the ':latest' tag or be untagged."
         pattern:

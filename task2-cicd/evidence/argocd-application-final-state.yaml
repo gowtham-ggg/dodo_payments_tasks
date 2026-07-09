@@ -1,0 +1,384 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  annotations:
+    kubectl.kubernetes.io/last-applied-configuration: |
+      {"apiVersion":"argoproj.io/v1alpha1","kind":"Application","metadata":{"annotations":{},"name":"ledger-api","namespace":"argocd"},"spec":{"destination":{"namespace":"payments","server":"https://kubernetes.default.svc"},"project":"default","source":{"path":"task1-hardening/deploy","repoURL":"https://github.com/gowtham-ggg/dodo_payments_tasks.git","targetRevision":"master"},"syncPolicy":{"automated":{"prune":true,"selfHeal":true},"syncOptions":["CreateNamespace=false"]}}}
+  creationTimestamp: "2026-07-09T07:08:48Z"
+  generation: 90
+  name: ledger-api
+  namespace: argocd
+  resourceVersion: "164549"
+  uid: b29f341a-871a-4632-ad76-0d663315e19e
+spec:
+  destination:
+    namespace: payments
+    server: https://kubernetes.default.svc
+  ignoreDifferences:
+  - group: apps
+    jsonPointers:
+    - /spec/template/spec/containers/0/image
+    kind: Deployment
+  project: default
+  source:
+    path: task1-hardening/deploy
+    repoURL: https://github.com/gowtham-ggg/dodo_payments_tasks.git
+    targetRevision: master
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+    - CreateNamespace=false
+status:
+  controllerNamespace: argocd
+  health:
+    lastTransitionTime: "2026-07-09T10:50:03Z"
+    status: Healthy
+  history:
+  - deployStartedAt: "2026-07-09T07:08:53Z"
+    deployedAt: "2026-07-09T07:08:55Z"
+    id: 0
+    initiatedBy:
+      automated: true
+    revision: 7c02ce254d1b6e18e4ad3ebee995a84d22f27090
+    source:
+      path: task1-hardening/deploy
+      repoURL: https://github.com/gowtham-ggg/dodo_payments_tasks.git
+      targetRevision: master
+  - deployStartedAt: "2026-07-09T10:49:43Z"
+    deployedAt: "2026-07-09T10:49:44Z"
+    id: 1
+    initiatedBy:
+      automated: true
+    revision: 32ea34c5f999662b0c0cc58e469036f9a3a9dc88
+    source:
+      path: task1-hardening/deploy
+      repoURL: https://github.com/gowtham-ggg/dodo_payments_tasks.git
+      targetRevision: master
+  operationState:
+    finishedAt: "2026-07-09T10:49:44Z"
+    message: successfully synced (all tasks run)
+    operation:
+      initiatedBy:
+        automated: true
+      retry:
+        limit: 5
+      sync:
+        prune: true
+        revision: 32ea34c5f999662b0c0cc58e469036f9a3a9dc88
+        source:
+          path: task1-hardening/deploy
+          repoURL: https://github.com/gowtham-ggg/dodo_payments_tasks.git
+          targetRevision: master
+        syncOptions:
+        - CreateNamespace=false
+    phase: Succeeded
+    startedAt: "2026-07-09T10:49:43Z"
+    syncResult:
+      resources:
+      - group: ""
+        hookPhase: Running
+        kind: Namespace
+        message: namespace/payments unchanged
+        name: payments
+        namespace: payments
+        status: Synced
+        syncPhase: Sync
+        version: v1
+      - group: ""
+        hookPhase: Running
+        kind: ServiceAccount
+        message: serviceaccount/reporting unchanged
+        name: reporting
+        namespace: payments
+        status: Synced
+        syncPhase: Sync
+        version: v1
+      - group: ""
+        hookPhase: Running
+        kind: ServiceAccount
+        message: serviceaccount/persona-admin unchanged
+        name: persona-admin
+        namespace: payments
+        status: Synced
+        syncPhase: Sync
+        version: v1
+      - group: ""
+        hookPhase: Running
+        kind: ServiceAccount
+        message: serviceaccount/ledger-api unchanged
+        name: ledger-api
+        namespace: payments
+        status: Synced
+        syncPhase: Sync
+        version: v1
+      - group: ""
+        hookPhase: Running
+        kind: ServiceAccount
+        message: serviceaccount/persona-developer unchanged
+        name: persona-developer
+        namespace: payments
+        status: Synced
+        syncPhase: Sync
+        version: v1
+      - group: ""
+        hookPhase: Running
+        kind: ServiceAccount
+        message: serviceaccount/persona-operator unchanged
+        name: persona-operator
+        namespace: payments
+        status: Synced
+        syncPhase: Sync
+        version: v1
+      - group: rbac.authorization.k8s.io
+        hookPhase: Running
+        kind: Role
+        message: role.rbac.authorization.k8s.io/ledger-api-role reconciled. role.rbac.authorization.k8s.io/ledger-api-role
+          unchanged
+        name: ledger-api-role
+        namespace: payments
+        status: Synced
+        syncPhase: Sync
+        version: v1
+      - group: rbac.authorization.k8s.io
+        hookPhase: Running
+        kind: Role
+        message: role.rbac.authorization.k8s.io/payments-developer reconciled. role.rbac.authorization.k8s.io/payments-developer
+          unchanged
+        name: payments-developer
+        namespace: payments
+        status: Synced
+        syncPhase: Sync
+        version: v1
+      - group: rbac.authorization.k8s.io
+        hookPhase: Running
+        kind: Role
+        message: role.rbac.authorization.k8s.io/payments-operator reconciled. role.rbac.authorization.k8s.io/payments-operator
+          unchanged
+        name: payments-operator
+        namespace: payments
+        status: Synced
+        syncPhase: Sync
+        version: v1
+      - group: rbac.authorization.k8s.io
+        hookPhase: Running
+        kind: Role
+        message: role.rbac.authorization.k8s.io/payments-admin reconciled. role.rbac.authorization.k8s.io/payments-admin
+          unchanged
+        name: payments-admin
+        namespace: payments
+        status: Synced
+        syncPhase: Sync
+        version: v1
+      - group: rbac.authorization.k8s.io
+        hookPhase: Running
+        kind: RoleBinding
+        message: rolebinding.rbac.authorization.k8s.io/payments-operator-binding reconciled.
+          rolebinding.rbac.authorization.k8s.io/payments-operator-binding unchanged
+        name: payments-operator-binding
+        namespace: payments
+        status: Synced
+        syncPhase: Sync
+        version: v1
+      - group: rbac.authorization.k8s.io
+        hookPhase: Running
+        kind: RoleBinding
+        message: rolebinding.rbac.authorization.k8s.io/payments-developer-binding
+          reconciled. rolebinding.rbac.authorization.k8s.io/payments-developer-binding
+          unchanged
+        name: payments-developer-binding
+        namespace: payments
+        status: Synced
+        syncPhase: Sync
+        version: v1
+      - group: rbac.authorization.k8s.io
+        hookPhase: Running
+        kind: RoleBinding
+        message: rolebinding.rbac.authorization.k8s.io/ledger-api-rolebinding reconciled.
+          rolebinding.rbac.authorization.k8s.io/ledger-api-rolebinding unchanged
+        name: ledger-api-rolebinding
+        namespace: payments
+        status: Synced
+        syncPhase: Sync
+        version: v1
+      - group: rbac.authorization.k8s.io
+        hookPhase: Running
+        kind: RoleBinding
+        message: rolebinding.rbac.authorization.k8s.io/payments-admin-binding reconciled.
+          rolebinding.rbac.authorization.k8s.io/payments-admin-binding unchanged
+        name: payments-admin-binding
+        namespace: payments
+        status: Synced
+        syncPhase: Sync
+        version: v1
+      - group: ""
+        hookPhase: Running
+        kind: Service
+        message: service/ledger-api unchanged
+        name: ledger-api
+        namespace: payments
+        status: Synced
+        syncPhase: Sync
+        version: v1
+      - group: apps
+        hookPhase: Running
+        images:
+        - curlimages/curl:8.8.0
+        kind: Deployment
+        message: deployment.apps/reporting unchanged
+        name: reporting
+        namespace: payments
+        status: Synced
+        syncPhase: Sync
+        version: v1
+      - group: apps
+        hookPhase: Running
+        images:
+        - 172.20.0.3:5000/ledger-api:insecure
+        kind: Deployment
+        message: deployment.apps/ledger-api configured
+        name: ledger-api
+        namespace: payments
+        status: Synced
+        syncPhase: Sync
+        version: v1
+      - group: bitnami.com
+        hookPhase: Running
+        kind: SealedSecret
+        message: sealedsecret.bitnami.com/ledger-api-secrets unchanged
+        name: ledger-api-secrets
+        namespace: payments
+        status: Synced
+        syncPhase: Sync
+        version: v1alpha1
+      revision: 32ea34c5f999662b0c0cc58e469036f9a3a9dc88
+      source:
+        path: task1-hardening/deploy
+        repoURL: https://github.com/gowtham-ggg/dodo_payments_tasks.git
+        targetRevision: master
+  reconciledAt: "2026-07-09T10:53:00Z"
+  resourceHealthSource: appTree
+  resources:
+  - kind: Namespace
+    name: payments
+    status: Synced
+    version: v1
+  - kind: Service
+    name: ledger-api
+    namespace: payments
+    status: Synced
+    version: v1
+  - kind: ServiceAccount
+    name: ledger-api
+    namespace: payments
+    status: Synced
+    version: v1
+  - kind: ServiceAccount
+    name: persona-admin
+    namespace: payments
+    status: Synced
+    version: v1
+  - kind: ServiceAccount
+    name: persona-developer
+    namespace: payments
+    status: Synced
+    version: v1
+  - kind: ServiceAccount
+    name: persona-operator
+    namespace: payments
+    status: Synced
+    version: v1
+  - kind: ServiceAccount
+    name: reporting
+    namespace: payments
+    status: Synced
+    version: v1
+  - group: apps
+    kind: Deployment
+    name: ledger-api
+    namespace: payments
+    status: Synced
+    version: v1
+  - group: apps
+    kind: Deployment
+    name: reporting
+    namespace: payments
+    status: Synced
+    version: v1
+  - group: bitnami.com
+    kind: SealedSecret
+    name: ledger-api-secrets
+    namespace: payments
+    status: Synced
+    version: v1alpha1
+  - group: rbac.authorization.k8s.io
+    kind: Role
+    name: ledger-api-role
+    namespace: payments
+    status: Synced
+    version: v1
+  - group: rbac.authorization.k8s.io
+    kind: Role
+    name: payments-admin
+    namespace: payments
+    status: Synced
+    version: v1
+  - group: rbac.authorization.k8s.io
+    kind: Role
+    name: payments-developer
+    namespace: payments
+    status: Synced
+    version: v1
+  - group: rbac.authorization.k8s.io
+    kind: Role
+    name: payments-operator
+    namespace: payments
+    status: Synced
+    version: v1
+  - group: rbac.authorization.k8s.io
+    kind: RoleBinding
+    name: ledger-api-rolebinding
+    namespace: payments
+    status: Synced
+    version: v1
+  - group: rbac.authorization.k8s.io
+    kind: RoleBinding
+    name: payments-admin-binding
+    namespace: payments
+    status: Synced
+    version: v1
+  - group: rbac.authorization.k8s.io
+    kind: RoleBinding
+    name: payments-developer-binding
+    namespace: payments
+    status: Synced
+    version: v1
+  - group: rbac.authorization.k8s.io
+    kind: RoleBinding
+    name: payments-operator-binding
+    namespace: payments
+    status: Synced
+    version: v1
+  sourceHydrator: {}
+  sourceType: Directory
+  summary:
+    images:
+    - 172.20.0.3:5000/ledger-api:insecure@sha256:7a0a6e625908ce67fada5476551e95d8f8b36f659d02b5d10b4f1eaafb2c5c5d
+    - curlimages/curl:8.8.0
+  sync:
+    comparedTo:
+      destination:
+        namespace: payments
+        server: https://kubernetes.default.svc
+      ignoreDifferences:
+      - group: apps
+        jsonPointers:
+        - /spec/template/spec/containers/0/image
+        kind: Deployment
+      source:
+        path: task1-hardening/deploy
+        repoURL: https://github.com/gowtham-ggg/dodo_payments_tasks.git
+        targetRevision: master
+    revision: 32ea34c5f999662b0c0cc58e469036f9a3a9dc88
+    status: Synced

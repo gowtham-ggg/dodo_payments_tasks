@@ -12,6 +12,8 @@ spec:
           - resources:
               kinds:
                 - Pod
+              namespaces:
+                - payments
       validate:
         message: "Pod-level securityContext.runAsNonRoot must be explicitly set to true."
         pattern:
@@ -24,6 +26,8 @@ spec:
           - resources:
               kinds:
                 - Pod
+              namespaces:
+                - payments
       validate:
         message: "Every container must explicitly set securityContext.runAsNonRoot: true."
         foreach:
