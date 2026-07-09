@@ -8,6 +8,7 @@
 name: Secure CI/CD Pipeline (patched app — happy path demo)
 
 on:
+  workflow_dispatch:
   push:
     branches: [main, master]
     paths:
