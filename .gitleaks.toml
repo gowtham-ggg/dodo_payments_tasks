@@ -8,4 +8,4 @@ useDefault = true
 description = "Evidence/report directories intentionally contain preserved findings"
 paths = [
   '''.*/evidence/.*''',
-]
+] 
