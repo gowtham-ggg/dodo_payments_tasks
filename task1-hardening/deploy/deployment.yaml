@@ -29,6 +29,8 @@ spec:
           image: 172.20.0.3:5000/ledger-api:insecure
           imagePullPolicy: IfNotPresent
           securityContext:
+            runAsNonRoot: true
+            runAsUser: 1000
             allowPrivilegeEscalation: false
             readOnlyRootFilesystem: true
             capabilities:
