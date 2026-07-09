@@ -1,0 +1,125 @@
+# This workflow proves the pipeline's full happy path (build → scan → sign →
+# attest → verify) against a PATCHED copy of ledger-api that fixes the real
+# findings from ci-cd.yml (insecure deserialization, SSRF, root Dockerfile,
+# EOL base image). It exists specifically to demonstrate the signing and
+# attestation stages, which the original insecure app never reaches because
+# it correctly fails Semgrep. See task2-cicd/fail-policy.md for the full
+# reasoning on why the original app is left unpatched as evidence.
+name: Secure CI/CD Pipeline (patched app — happy path demo)
+
+on:
+  push:
+    branches: [main, master]
+    paths:
+      - 'task2-cicd/ledger-api-patched/**'
+      - '.github/workflows/ci-cd-patched-demo.yml'
+
+env:
+  IMAGE_NAME: ghcr.io/${{ github.repository }}/ledger-api-patched
+  APP_DIR: task2-cicd/ledger-api-patched
+
+permissions:
+  contents: read
+  packages: write
+  id-token: write
+  security-events: write
+
+jobs:
+  secrets-scan:
+    name: Gitleaks (secrets scan)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Run gitleaks
+        uses: gitleaks/gitleaks-action@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITLEAKS_CONFIG: .gitleaks.toml
+
+  sast:
+    name: Semgrep (SAST)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Run Semgrep
+        run: |
+          pip install semgrep
+          semgrep --config auto --sarif --output semgrep-results.sarif ${{ env.APP_DIR }} || true
+          semgrep --config auto --error ${{ env.APP_DIR }}
+      - name: Upload SARIF to Security tab
+        if: always()
+        uses: github/codeql-action/upload-sarif@v3
+        with:
+          sarif_file: semgrep-results.sarif
+          category: patched-demo-semgrep
+
+  build-scan-sign:
+    name: Build, scan, sign, attest
+    needs: [secrets-scan, sast]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Log in to GHCR
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build image
+        uses: docker/build-push-action@v5
+        with:
+          context: ${{ env.APP_DIR }}
+          tags: ${{ env.IMAGE_NAME }}:${{ github.sha }}
+          load: true
+          push: false
+
+      - name: Trivy scan — hard block on fixable CRITICAL
+        uses: aquasecurity/trivy-action@master
+        with:
+          image-ref: ${{ env.IMAGE_NAME }}:${{ github.sha }}
+          format: 'sarif'
+          output: 'trivy-results.sarif'
+          severity: 'CRITICAL'
+          ignore-unfixed: true
+          exit-code: '1'
+
+      - name: Upload Trivy SARIF to Security tab
+        if: always()
+        uses: github/codeql-action/upload-sarif@v3
+        with:
+          sarif_file: 'trivy-results.sarif'
+          category: patched-demo-trivy
+
+      - name: Push image
+        uses: docker/build-push-action@v5
+        with:
+          context: ${{ env.APP_DIR }}
+          tags: ${{ env.IMAGE_NAME }}:${{ github.sha }}
+          push: true
+
+      - name: Install Cosign
+        uses: sigstore/cosign-installer@v3
+
+      - name: Sign image (keyless, OIDC)
+        run: cosign sign --yes ${{ env.IMAGE_NAME }}:${{ github.sha }}
+
+      - name: Generate SLSA provenance attestation
+        run: |
+          cosign attest --yes \
+            --predicate <(echo '{"buildType":"github-actions","builder":{"id":"${{ github.workflow }}"},"invocation":{"configSource":{"uri":"${{ github.repository }}","digest":{"sha1":"${{ github.sha }}"}}}}') \
+            --type slsaprovenance \
+            ${{ env.IMAGE_NAME }}:${{ github.sha }}
+
+      - name: Verify signature
+        run: |
+          cosign verify \
+            --certificate-identity-regexp "https://github.com/${{ github.repository }}/.*" \
+            --certificate-oidc-issuer https://token.actions.githubusercontent.com \
+            ${{ env.IMAGE_NAME }}:${{ github.sha }}
