@@ -1,0 +1,17 @@
+=== DEVELOPER ===
+yes
+no
+no
+no
+=== OPERATOR ===
+yes
+yes
+no
+no
+=== ADMIN ===
+yes
+yes
+no
+Warning: resource 'nodes' is not namespace scoped
+
+no

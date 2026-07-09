@@ -1,0 +1,13 @@
+Error from server: error when applying patch:
+{"metadata":{"annotations":{"kubectl.kubernetes.io/last-applied-configuration":"{\"apiVersion\":\"apps/v1\",\"kind\":\"Deployment\",\"metadata\":{\"annotations\":{},\"labels\":{\"app\":\"ledger-api\"},\"name\":\"ledger-api\",\"namespace\":\"payments\"},\"spec\":{\"replicas\":3,\"selector\":{\"matchLabels\":{\"app\":\"ledger-api\"}},\"template\":{\"metadata\":{\"labels\":{\"app\":\"ledger-api\"}},\"spec\":{\"containers\":[{\"env\":[{\"name\":\"STRIPE_API_KEY\",\"value\":\"sk_live_9f3a2b7c1e4d8REDACTED\"},{\"name\":\"DB_PASSWORD\",\"value\":\"P@ssw0rd123\"}],\"image\":\"ledger-api:insecure\",\"imagePullPolicy\":\"IfNotPresent\",\"name\":\"ledger-api\",\"ports\":[{\"containerPort\":8080}]}]}}}}\n"}},"spec":{"template":{"spec":{"$setElementOrder/containers":[{"name":"ledger-api"}],"automountServiceAccountToken":null,"containers":[{"$setElementOrder/env":[{"name":"STRIPE_API_KEY"},{"name":"DB_PASSWORD"}],"env":[{"name":"STRIPE_API_KEY","value":"sk_live_9f3a2b7c1e4d8REDACTED","valueFrom":null},{"name":"DB_PASSWORD","value":"P@ssw0rd123","valueFrom":null},{"$patch":"delete","name":"PYTHONDONTWRITEBYTECODE"}],"image":"ledger-api:insecure","livenessProbe":null,"name":"ledger-api","readinessProbe":null,"resources":null,"securityContext":null,"volumeMounts":null}],"securityContext":null,"serviceAccountName":null,"volumes":null}}}}
+to:
+Resource: "apps/v1, Resource=deployments", GroupVersionKind: "apps/v1, Kind=Deployment"
+Name: "ledger-api", Namespace: "payments"
+for: "/home/gowthamg/dodo-devsecops-assignment/task1-hardening/deployment-insecure-original.yaml": error when patching "/home/gowthamg/dodo-devsecops-assignment/task1-hardening/deployment-insecure-original.yaml": admission webhook "validate.kyverno.svc-fail" denied the request: 
+
+resource Deployment/payments/ledger-api was blocked due to the following policies 
+
+disallow-root-containers:
+  autogen-require-run-as-non-root: 'validation error: Pod-level securityContext.runAsNonRoot
+    must be explicitly set to true. rule autogen-require-run-as-non-root failed at
+    path /spec/template/spec/securityContext/runAsNonRoot/'

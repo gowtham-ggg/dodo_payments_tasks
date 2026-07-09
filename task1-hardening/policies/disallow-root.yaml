@@ -1,0 +1,36 @@
+apiVersion: kyverno.io/v1
+kind: ClusterPolicy
+metadata:
+  name: disallow-root-containers
+spec:
+  validationFailureAction: Enforce
+  background: true
+  rules:
+    - name: require-run-as-non-root
+      match:
+        any:
+          - resources:
+              kinds:
+                - Pod
+      validate:
+        message: "Pod-level securityContext.runAsNonRoot must be explicitly set to true."
+        pattern:
+          spec:
+            securityContext:
+              runAsNonRoot: true
+    - name: require-container-run-as-non-root
+      match:
+        any:
+          - resources:
+              kinds:
+                - Pod
+      validate:
+        message: "Every container must explicitly set securityContext.runAsNonRoot: true."
+        foreach:
+          - list: "request.object.spec.containers"
+            deny:
+              conditions:
+                any:
+                  - key: "{{ element.securityContext.runAsNonRoot || 'false' }}"
+                    operator: NotEquals
+                    value: true

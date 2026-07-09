@@ -1,0 +1,104 @@
+# ---------- DEVELOPER: read-only, no secrets ----------
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: payments-developer
+  namespace: payments
+rules:
+  - apiGroups: [""]
+    resources: ["pods", "pods/log", "configmaps", "services"]
+    verbs: ["get", "list", "watch"]
+  - apiGroups: ["apps"]
+    resources: ["deployments", "replicasets"]
+    verbs: ["get", "list", "watch"]
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: persona-developer
+  namespace: payments
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: payments-developer-binding
+  namespace: payments
+subjects:
+  - kind: ServiceAccount
+    name: persona-developer
+    namespace: payments
+roleRef:
+  kind: Role
+  name: payments-developer
+  apiGroup: rbac.authorization.k8s.io
+---
+# ---------- OPERATOR: developer + scale/restart + edit configmaps ----------
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: payments-operator
+  namespace: payments
+rules:
+  - apiGroups: [""]
+    resources: ["pods", "pods/log", "services"]
+    verbs: ["get", "list", "watch"]
+  - apiGroups: [""]
+    resources: ["configmaps"]
+    verbs: ["get", "list", "watch", "update", "patch"]
+  - apiGroups: ["apps"]
+    resources: ["deployments", "replicasets"]
+    verbs: ["get", "list", "watch", "update", "patch"]
+  - apiGroups: ["apps"]
+    resources: ["deployments/scale"]
+    verbs: ["update", "patch"]
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: persona-operator
+  namespace: payments
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: payments-operator-binding
+  namespace: payments
+subjects:
+  - kind: ServiceAccount
+    name: persona-operator
+    namespace: payments
+roleRef:
+  kind: Role
+  name: payments-operator
+  apiGroup: rbac.authorization.k8s.io
+---
+# ---------- ADMIN: full control, namespace-scoped only ----------
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: payments-admin
+  namespace: payments
+rules:
+  - apiGroups: ["", "apps", "rbac.authorization.k8s.io", "bitnami.com"]
+    resources: ["*"]
+    verbs: ["*"]
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: persona-admin
+  namespace: payments
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: payments-admin-binding
+  namespace: payments
+subjects:
+  - kind: ServiceAccount
+    name: persona-admin
+    namespace: payments
+roleRef:
+  kind: Role
+  name: payments-admin
+  apiGroup: rbac.authorization.k8s.io

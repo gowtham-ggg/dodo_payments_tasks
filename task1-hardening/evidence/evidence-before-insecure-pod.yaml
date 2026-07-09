@@ -1,0 +1,428 @@
+apiVersion: v1
+items:
+- apiVersion: v1
+  kind: Pod
+  metadata:
+    creationTimestamp: "2026-07-08T07:22:02Z"
+    generateName: ledger-api-5ff56c68cd-
+    generation: 1
+    labels:
+      app: ledger-api
+      pod-template-hash: 5ff56c68cd
+    name: ledger-api-5ff56c68cd-5p456
+    namespace: payments
+    ownerReferences:
+    - apiVersion: apps/v1
+      blockOwnerDeletion: true
+      controller: true
+      kind: ReplicaSet
+      name: ledger-api-5ff56c68cd
+      uid: c4f5a3b7-695f-4161-8106-c05266010ff8
+    resourceVersion: "1381"
+    uid: cade1060-9c19-4def-8095-44b0cf9d9c04
+  spec:
+    containers:
+    - env:
+      - name: STRIPE_API_KEY
+        value: sk_live_9f3a2b7c1e4d8REDACTED
+      - name: DB_PASSWORD
+        value: P@ssw0rd123
+      image: ledger-api:insecure
+      imagePullPolicy: IfNotPresent
+      name: ledger-api
+      ports:
+      - containerPort: 8080
+        protocol: TCP
+      resources: {}
+      terminationMessagePath: /dev/termination-log
+      terminationMessagePolicy: File
+      volumeMounts:
+      - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+        name: kube-api-access-phrrf
+        readOnly: true
+    dnsPolicy: ClusterFirst
+    enableServiceLinks: true
+    nodeName: dodo-ledger-control-plane
+    preemptionPolicy: PreemptLowerPriority
+    priority: 0
+    restartPolicy: Always
+    schedulerName: default-scheduler
+    securityContext: {}
+    serviceAccount: default
+    serviceAccountName: default
+    terminationGracePeriodSeconds: 30
+    tolerations:
+    - effect: NoExecute
+      key: node.kubernetes.io/not-ready
+      operator: Exists
+      tolerationSeconds: 300
+    - effect: NoExecute
+      key: node.kubernetes.io/unreachable
+      operator: Exists
+      tolerationSeconds: 300
+    volumes:
+    - name: kube-api-access-phrrf
+      projected:
+        defaultMode: 420
+        sources:
+        - serviceAccountToken:
+            expirationSeconds: 3607
+            path: token
+        - configMap:
+            items:
+            - key: ca.crt
+              path: ca.crt
+            name: kube-root-ca.crt
+        - downwardAPI:
+            items:
+            - fieldRef:
+                apiVersion: v1
+                fieldPath: metadata.namespace
+              path: namespace
+  status:
+    conditions:
+    - lastProbeTime: null
+      lastTransitionTime: "2026-07-08T07:22:03Z"
+      observedGeneration: 1
+      status: "True"
+      type: PodReadyToStartContainers
+    - lastProbeTime: null
+      lastTransitionTime: "2026-07-08T07:22:02Z"
+      observedGeneration: 1
+      status: "True"
+      type: Initialized
+    - lastProbeTime: null
+      lastTransitionTime: "2026-07-08T07:22:03Z"
+      observedGeneration: 1
+      status: "True"
+      type: Ready
+    - lastProbeTime: null
+      lastTransitionTime: "2026-07-08T07:22:03Z"
+      observedGeneration: 1
+      status: "True"
+      type: ContainersReady
+    - lastProbeTime: null
+      lastTransitionTime: "2026-07-08T07:22:02Z"
+      observedGeneration: 1
+      status: "True"
+      type: PodScheduled
+    containerStatuses:
+    - containerID: containerd://6a2896c79898076e31620139e50c69b2590b2ec7835c7c7396f835f0d1484880
+      image: docker.io/library/ledger-api:insecure
+      imageID: docker.io/library/import-2026-07-08@sha256:db54f18ac1c2e0c8a048e139e08ce86112dd8cd52ff39ab05b555cbbd57034c9
+      lastState: {}
+      name: ledger-api
+      ready: true
+      resources: {}
+      restartCount: 0
+      started: true
+      state:
+        running:
+          startedAt: "2026-07-08T07:22:03Z"
+      user:
+        linux:
+          gid: 0
+          supplementalGroups:
+          - 0
+          uid: 0
+      volumeMounts:
+      - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+        name: kube-api-access-phrrf
+        readOnly: true
+        recursiveReadOnly: Disabled
+    hostIP: 172.20.0.2
+    hostIPs:
+    - ip: 172.20.0.2
+    observedGeneration: 1
+    phase: Running
+    podIP: 10.244.0.6
+    podIPs:
+    - ip: 10.244.0.6
+    qosClass: BestEffort
+    resources: {}
+    startTime: "2026-07-08T07:22:02Z"
+- apiVersion: v1
+  kind: Pod
+  metadata:
+    creationTimestamp: "2026-07-08T07:22:02Z"
+    generateName: ledger-api-5ff56c68cd-
+    generation: 1
+    labels:
+      app: ledger-api
+      pod-template-hash: 5ff56c68cd
+    name: ledger-api-5ff56c68cd-6wdsj
+    namespace: payments
+    ownerReferences:
+    - apiVersion: apps/v1
+      blockOwnerDeletion: true
+      controller: true
+      kind: ReplicaSet
+      name: ledger-api-5ff56c68cd
+      uid: c4f5a3b7-695f-4161-8106-c05266010ff8
+    resourceVersion: "1387"
+    uid: 7316d091-c069-4404-9f20-0daee5ccc6a0
+  spec:
+    containers:
+    - env:
+      - name: STRIPE_API_KEY
+        value: sk_live_9f3a2b7c1e4d8REDACTED
+      - name: DB_PASSWORD
+        value: P@ssw0rd123
+      image: ledger-api:insecure
+      imagePullPolicy: IfNotPresent
+      name: ledger-api
+      ports:
+      - containerPort: 8080
+        protocol: TCP
+      resources: {}
+      terminationMessagePath: /dev/termination-log
+      terminationMessagePolicy: File
+      volumeMounts:
+      - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+        name: kube-api-access-rdtc8
+        readOnly: true
+    dnsPolicy: ClusterFirst
+    enableServiceLinks: true
+    nodeName: dodo-ledger-control-plane
+    preemptionPolicy: PreemptLowerPriority
+    priority: 0
+    restartPolicy: Always
+    schedulerName: default-scheduler
+    securityContext: {}
+    serviceAccount: default
+    serviceAccountName: default
+    terminationGracePeriodSeconds: 30
+    tolerations:
+    - effect: NoExecute
+      key: node.kubernetes.io/not-ready
+      operator: Exists
+      tolerationSeconds: 300
+    - effect: NoExecute
+      key: node.kubernetes.io/unreachable
+      operator: Exists
+      tolerationSeconds: 300
+    volumes:
+    - name: kube-api-access-rdtc8
+      projected:
+        defaultMode: 420
+        sources:
+        - serviceAccountToken:
+            expirationSeconds: 3607
+            path: token
+        - configMap:
+            items:
+            - key: ca.crt
+              path: ca.crt
+            name: kube-root-ca.crt
+        - downwardAPI:
+            items:
+            - fieldRef:
+                apiVersion: v1
+                fieldPath: metadata.namespace
+              path: namespace
+  status:
+    conditions:
+    - lastProbeTime: null
+      lastTransitionTime: "2026-07-08T07:22:03Z"
+      observedGeneration: 1
+      status: "True"
+      type: PodReadyToStartContainers
+    - lastProbeTime: null
+      lastTransitionTime: "2026-07-08T07:22:02Z"
+      observedGeneration: 1
+      status: "True"
+      type: Initialized
+    - lastProbeTime: null
+      lastTransitionTime: "2026-07-08T07:22:03Z"
+      observedGeneration: 1
+      status: "True"
+      type: Ready
+    - lastProbeTime: null
+      lastTransitionTime: "2026-07-08T07:22:03Z"
+      observedGeneration: 1
+      status: "True"
+      type: ContainersReady
+    - lastProbeTime: null
+      lastTransitionTime: "2026-07-08T07:22:02Z"
+      observedGeneration: 1
+      status: "True"
+      type: PodScheduled
+    containerStatuses:
+    - containerID: containerd://199bc0eac9c691c2e502a81338589820eead4ff9e9f3118c8b7e196950b58355
+      image: docker.io/library/ledger-api:insecure
+      imageID: docker.io/library/import-2026-07-08@sha256:db54f18ac1c2e0c8a048e139e08ce86112dd8cd52ff39ab05b555cbbd57034c9
+      lastState: {}
+      name: ledger-api
+      ready: true
+      resources: {}
+      restartCount: 0
+      started: true
+      state:
+        running:
+          startedAt: "2026-07-08T07:22:03Z"
+      user:
+        linux:
+          gid: 0
+          supplementalGroups:
+          - 0
+          uid: 0
+      volumeMounts:
+      - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+        name: kube-api-access-rdtc8
+        readOnly: true
+        recursiveReadOnly: Disabled
+    hostIP: 172.20.0.2
+    hostIPs:
+    - ip: 172.20.0.2
+    observedGeneration: 1
+    phase: Running
+    podIP: 10.244.0.7
+    podIPs:
+    - ip: 10.244.0.7
+    qosClass: BestEffort
+    resources: {}
+    startTime: "2026-07-08T07:22:02Z"
+- apiVersion: v1
+  kind: Pod
+  metadata:
+    creationTimestamp: "2026-07-08T07:22:02Z"
+    generateName: ledger-api-5ff56c68cd-
+    generation: 1
+    labels:
+      app: ledger-api
+      pod-template-hash: 5ff56c68cd
+    name: ledger-api-5ff56c68cd-m4k4h
+    namespace: payments
+    ownerReferences:
+    - apiVersion: apps/v1
+      blockOwnerDeletion: true
+      controller: true
+      kind: ReplicaSet
+      name: ledger-api-5ff56c68cd
+      uid: c4f5a3b7-695f-4161-8106-c05266010ff8
+    resourceVersion: "1375"
+    uid: d2d34546-608d-41a0-80a7-36fc56e4c0fa
+  spec:
+    containers:
+    - env:
+      - name: STRIPE_API_KEY
+        value: sk_live_9f3a2b7c1e4d8REDACTED
+      - name: DB_PASSWORD
+        value: P@ssw0rd123
+      image: ledger-api:insecure
+      imagePullPolicy: IfNotPresent
+      name: ledger-api
+      ports:
+      - containerPort: 8080
+        protocol: TCP
+      resources: {}
+      terminationMessagePath: /dev/termination-log
+      terminationMessagePolicy: File
+      volumeMounts:
+      - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+        name: kube-api-access-2klrl
+        readOnly: true
+    dnsPolicy: ClusterFirst
+    enableServiceLinks: true
+    nodeName: dodo-ledger-control-plane
+    preemptionPolicy: PreemptLowerPriority
+    priority: 0
+    restartPolicy: Always
+    schedulerName: default-scheduler
+    securityContext: {}
+    serviceAccount: default
+    serviceAccountName: default
+    terminationGracePeriodSeconds: 30
+    tolerations:
+    - effect: NoExecute
+      key: node.kubernetes.io/not-ready
+      operator: Exists
+      tolerationSeconds: 300
+    - effect: NoExecute
+      key: node.kubernetes.io/unreachable
+      operator: Exists
+      tolerationSeconds: 300
+    volumes:
+    - name: kube-api-access-2klrl
+      projected:
+        defaultMode: 420
+        sources:
+        - serviceAccountToken:
+            expirationSeconds: 3607
+            path: token
+        - configMap:
+            items:
+            - key: ca.crt
+              path: ca.crt
+            name: kube-root-ca.crt
+        - downwardAPI:
+            items:
+            - fieldRef:
+                apiVersion: v1
+                fieldPath: metadata.namespace
+              path: namespace
+  status:
+    conditions:
+    - lastProbeTime: null
+      lastTransitionTime: "2026-07-08T07:22:03Z"
+      observedGeneration: 1
+      status: "True"
+      type: PodReadyToStartContainers
+    - lastProbeTime: null
+      lastTransitionTime: "2026-07-08T07:22:02Z"
+      observedGeneration: 1
+      status: "True"
+      type: Initialized
+    - lastProbeTime: null
+      lastTransitionTime: "2026-07-08T07:22:03Z"
+      observedGeneration: 1
+      status: "True"
+      type: Ready
+    - lastProbeTime: null
+      lastTransitionTime: "2026-07-08T07:22:03Z"
+      observedGeneration: 1
+      status: "True"
+      type: ContainersReady
+    - lastProbeTime: null
+      lastTransitionTime: "2026-07-08T07:22:02Z"
+      observedGeneration: 1
+      status: "True"
+      type: PodScheduled
+    containerStatuses:
+    - containerID: containerd://10036d9191b2662b0621b4e6b909d03791b3a35346db909c60da0907c784c773
+      image: docker.io/library/ledger-api:insecure
+      imageID: docker.io/library/import-2026-07-08@sha256:db54f18ac1c2e0c8a048e139e08ce86112dd8cd52ff39ab05b555cbbd57034c9
+      lastState: {}
+      name: ledger-api
+      ready: true
+      resources: {}
+      restartCount: 0
+      started: true
+      state:
+        running:
+          startedAt: "2026-07-08T07:22:03Z"
+      user:
+        linux:
+          gid: 0
+          supplementalGroups:
+          - 0
+          uid: 0
+      volumeMounts:
+      - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+        name: kube-api-access-2klrl
+        readOnly: true
+        recursiveReadOnly: Disabled
+    hostIP: 172.20.0.2
+    hostIPs:
+    - ip: 172.20.0.2
+    observedGeneration: 1
+    phase: Running
+    podIP: 10.244.0.5
+    podIPs:
+    - ip: 10.244.0.5
+    qosClass: BestEffort
+    resources: {}
+    startTime: "2026-07-08T07:22:02Z"
+kind: List
+metadata:
+  resourceVersion: ""
