@@ -1,0 +1,11 @@
+title = "gitleaks config — dodopayments-devsecops-assignment"
+
+# Extend the default gitleaks ruleset rather than replacing it.
+[extend]
+useDefault = true
+
+[allowlist]
+description = "Evidence/report directories intentionally contain preserved findings"
+paths = [
+  '''.*/evidence/.*''',
+]

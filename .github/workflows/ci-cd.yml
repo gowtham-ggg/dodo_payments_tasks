@@ -31,7 +31,10 @@ jobs:
         uses: gitleaks/gitleaks-action@v2
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITLEAKS_CONFIG: .gitleaks.toml
         # Hard block: gitleaks-action fails the job by default on any finding.
+        # .gitleaks.toml excludes evidence/ directories, which intentionally
+        # preserve findings as documented proof, not live secrets.
 
   sast:
     name: Semgrep (SAST)
