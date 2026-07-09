@@ -96,6 +96,7 @@ jobs:
           format: 'sarif'
           output: 'trivy-results.sarif'
           severity: 'CRITICAL'
+          limit-severities-for-sarif: true
           ignore-unfixed: true   # unfixable CVEs warn, don't block — see fail-policy.md
           exit-code: '1'
 
