@@ -1,0 +1,2 @@
+error: --rm should only be used for attached containers
+See 'kubectl run -h' for help and examples

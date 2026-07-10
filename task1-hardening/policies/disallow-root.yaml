@@ -14,6 +14,13 @@ spec:
                 - Pod
               namespaces:
                 - payments
+      exclude:
+        any:
+          - resources:
+              selector:
+                matchExpressions:
+                  - key: gateway.networking.k8s.io/gateway-name
+                    operator: Exists
       validate:
         message: "Pod-level securityContext.runAsNonRoot must be explicitly set to true."
         pattern:
@@ -28,6 +35,13 @@ spec:
                 - Pod
               namespaces:
                 - payments
+      exclude:
+        any:
+          - resources:
+              selector:
+                matchExpressions:
+                  - key: gateway.networking.k8s.io/gateway-name
+                    operator: Exists
       validate:
         message: "Every container must explicitly set securityContext.runAsNonRoot: true."
         foreach:

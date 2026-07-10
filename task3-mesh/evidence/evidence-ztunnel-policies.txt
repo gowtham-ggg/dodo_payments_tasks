@@ -1,0 +1,2 @@
+NAMESPACE    POLICY NAME                   ACTION SCOPE
+istio-system istio_converted_static_strict Deny   WorkloadSelector

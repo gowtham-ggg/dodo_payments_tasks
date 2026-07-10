@@ -1,0 +1,37 @@
+INGRESS EXTERNAL HEALTH-CHECK: PARTIAL RESULT
+
+What's proven and working (see evidence-ingress-tls-termination.txt):
+- Istio Ingress Gateway deployed with TLS termination
+- Real TLSv1.3 handshake completes successfully
+- Self-signed certificate correctly presented (CN=ledger-api.dodopayments.local)
+- HTTP/2 negotiated over the TLS connection
+- The subsequent 403 (before we added an explicit allow) correctly demonstrated
+  zero-trust: gateway-originated traffic is not implicitly trusted just because
+  it arrived via the ingress path.
+
+What we attempted next but hit environment instability on:
+- Added a scoped AuthorizationPolicy allowing the ingress gateway's identity
+  to reach /health specifically (not /transactions).
+- Before this could be verified, the waypoint pod lost its XDS connection to
+  istiod for several minutes (visible in istiod/ztunnel logs, correlated with
+  multiple components restarting around the same time — likely memory
+  pressure on this local kind cluster, which was already tight before adding
+  the ingress gateway on top of Istio + ArgoCD + Kyverno + Sealed Secrets).
+- After restarting the waypoint to force reconnection, basic pod-to-pod ICMP
+  connectivity to the new waypoint pod IP itself failed (100% packet loss),
+  which is a kind/kindnet-level networking issue, not an Istio or policy
+  configuration problem. Confirmed this wasn't NetworkPolicy-related by
+  temporarily removing default-deny-all and retesting — still failed.
+
+Judgment call: rather than keep debugging local infrastructure flakiness on
+an optional bonus item, stopped here and documented the state honestly. The
+TLS termination + zero-trust default-deny behavior is solid, real evidence.
+The final "explicit allow works end-to-end for /health only" step is
+config that was applied and is believed correct (WaypointAccepted: True from
+the API), but wasn't independently re-verified due to the connectivity issue
+above.
+
+What I'd do with more time: run this on a machine/cloud VM with more
+headroom, or trim the local stack (e.g., skip ArgoCD or Kyverno's background
+scanning) while validating the mesh bonus items, to avoid resource
+contention masking real signal.

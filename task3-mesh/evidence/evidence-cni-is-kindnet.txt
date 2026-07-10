@@ -1,0 +1,1 @@
+kindnet-hww6w                                       1/1     Running   4 (35m ago)   44h   172.20.0.2    dodo-ledger-control-plane   <none>           <none>

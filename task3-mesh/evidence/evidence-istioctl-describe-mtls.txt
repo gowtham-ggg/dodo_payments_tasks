@@ -1,0 +1,8 @@
+Pod: ledger-api-644cc44bdd-mpqc5
+   Pod Revision: 
+   Pod Ports: 8080 (ledger-api)
+WARNING: ledger-api-644cc44bdd-mpqc5 is not part of mesh; no Istio sidecar
+--------------------
+2026-07-09T11:59:05.932055Z	error	klog	an error occurred forwarding 45129 -> 15000: error forwarding port 15000 to pod c748dae51a7d7e26d449a2070e8067fd96937dc9144549ed6a9d9642007e436b, uid : failed to execute portforward in network namespace "/var/run/netns/cni-6ba031f6-0c04-218e-c1ad-061f39facc13": failed to connect to localhost:15000 inside namespace "c748dae51a7d7e26d449a2070e8067fd96937dc9144549ed6a9d9642007e436b", IPv4: dial tcp4 127.0.0.1:15000: connect: connection refused IPv6 dial tcp6 [::1]:15000: connect: connection refused : Unhandled Error	logger=UnhandledError
+2026-07-09T11:59:05.932352Z	error	port forward failed: lost connection to pod
+Error: failed to execute command on sidecar: failure running port forward process: Get "http://localhost:45129/config_dump": EOF

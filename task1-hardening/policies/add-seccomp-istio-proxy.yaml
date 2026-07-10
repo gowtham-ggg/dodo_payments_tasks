@@ -1,0 +1,22 @@
+apiVersion: kyverno.io/v1
+kind: ClusterPolicy
+metadata:
+  name: add-seccomp-istio-proxy
+spec:
+  rules:
+    - name: add-seccomp-to-istio-proxy
+      match:
+        any:
+          - resources:
+              kinds:
+                - Pod
+              namespaces:
+                - payments
+      mutate:
+        patchStrategicMerge:
+          spec:
+            containers:
+              - (name): "istio-proxy"
+                securityContext:
+                  +(seccompProfile):
+                    type: RuntimeDefault

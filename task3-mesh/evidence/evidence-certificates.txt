@@ -1,0 +1,5 @@
+CERTIFICATE NAME                                     TYPE     STATUS        VALID CERT     SERIAL NUMBER                        NOT AFTER                NOT BEFORE
+spiffe://cluster.local/ns/payments/sa/ledger-api     Leaf     Available     true           2c66fb10fb9dccfa0f901a1a1932b038     2026-07-11T02:50:16Z     2026-07-10T02:48:16Z
+spiffe://cluster.local/ns/payments/sa/ledger-api     Root     Available     true           ad638df87a2e5f2baeeef0edbfcfc17d     2036-07-06T11:51:27Z     2026-07-09T11:51:27Z
+spiffe://cluster.local/ns/payments/sa/reporting      Leaf     Available     true           493904568d88d0b12cfc780ae5e5ab31     2026-07-11T02:50:16Z     2026-07-10T02:48:16Z
+spiffe://cluster.local/ns/payments/sa/reporting      Root     Available     true           ad638df87a2e5f2baeeef0edbfcfc17d     2036-07-06T11:51:27Z     2026-07-09T11:51:27Z

@@ -1,0 +1,26 @@
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0* Host ledger-api.payments.svc.cluster.local:8080 was resolved.
+* IPv6: (none)
+* IPv4: 10.96.68.243
+*   Trying 10.96.68.243:8080...
+* Connected to ledger-api.payments.svc.cluster.local (10.96.68.243) port 8080
+> GET /health HTTP/1.1
+> Host: ledger-api.payments.svc.cluster.local:8080
+> User-Agent: curl/8.8.0
+> Accept: */*
+> 
+* Request completely sent off
+* HTTP 1.0, assume close after body
+< HTTP/1.0 200 OK
+< Content-Type: application/json
+< Content-Length: 21
+< Server: Werkzeug/0.14.1 Python/3.6.15
+< Date: Thu, 09 Jul 2026 11:58:10 GMT
+< 
+{ [20 bytes data]
+100    21  100    21    0     0   6055      0 --:--:-- --:--:-- --:--:--  7000
+* Closing connection
+{
+  "status": "ok"
+}

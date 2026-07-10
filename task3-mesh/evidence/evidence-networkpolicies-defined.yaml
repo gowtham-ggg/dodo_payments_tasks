@@ -1,0 +1,75 @@
+apiVersion: v1
+items:
+- apiVersion: networking.k8s.io/v1
+  kind: NetworkPolicy
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"networking.k8s.io/v1","kind":"NetworkPolicy","metadata":{"annotations":{},"name":"allow-dns-egress","namespace":"payments"},"spec":{"egress":[{"ports":[{"port":53,"protocol":"UDP"},{"port":53,"protocol":"TCP"}],"to":[{"namespaceSelector":{}}]}],"podSelector":{},"policyTypes":["Egress"]}}
+    creationTimestamp: "2026-07-10T03:21:57Z"
+    generation: 1
+    name: allow-dns-egress
+    namespace: payments
+    resourceVersion: "251723"
+    uid: 9ca67af8-17d2-44e6-9d7d-cd48ac3e866b
+  spec:
+    egress:
+    - ports:
+      - port: 53
+        protocol: UDP
+      - port: 53
+        protocol: TCP
+      to:
+      - namespaceSelector: {}
+    podSelector: {}
+    policyTypes:
+    - Egress
+- apiVersion: networking.k8s.io/v1
+  kind: NetworkPolicy
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"networking.k8s.io/v1","kind":"NetworkPolicy","metadata":{"annotations":{},"name":"allow-reporting-to-ledger-api-l3","namespace":"payments"},"spec":{"ingress":[{"from":[{"podSelector":{"matchLabels":{"app":"reporting"}}},{"podSelector":{"matchLabels":{"gateway.networking.k8s.io/gateway-name":"waypoint"}}}],"ports":[{"port":8080,"protocol":"TCP"}]}],"podSelector":{"matchLabels":{"app":"ledger-api"}},"policyTypes":["Ingress"]}}
+    creationTimestamp: "2026-07-10T03:21:57Z"
+    generation: 1
+    name: allow-reporting-to-ledger-api-l3
+    namespace: payments
+    resourceVersion: "251722"
+    uid: 48aad0cd-76b3-4035-ae33-ca1e9db4e1da
+  spec:
+    ingress:
+    - from:
+      - podSelector:
+          matchLabels:
+            app: reporting
+      - podSelector:
+          matchLabels:
+            gateway.networking.k8s.io/gateway-name: waypoint
+      ports:
+      - port: 8080
+        protocol: TCP
+    podSelector:
+      matchLabels:
+        app: ledger-api
+    policyTypes:
+    - Ingress
+- apiVersion: networking.k8s.io/v1
+  kind: NetworkPolicy
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"networking.k8s.io/v1","kind":"NetworkPolicy","metadata":{"annotations":{},"name":"default-deny-all","namespace":"payments"},"spec":{"podSelector":{},"policyTypes":["Ingress","Egress"]}}
+    creationTimestamp: "2026-07-10T03:21:57Z"
+    generation: 1
+    name: default-deny-all
+    namespace: payments
+    resourceVersion: "251721"
+    uid: 5a057655-7bb0-4ccf-ae62-134d22f43998
+  spec:
+    podSelector: {}
+    policyTypes:
+    - Ingress
+    - Egress
+kind: List
+metadata:
+  resourceVersion: ""

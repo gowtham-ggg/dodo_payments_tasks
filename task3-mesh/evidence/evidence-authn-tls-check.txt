@@ -1,0 +1,6 @@
+Error: unknown command "authn" for "istioctl"
+
+Did you mean this?
+	authz
+
+Run 'istioctl --help' for usage.

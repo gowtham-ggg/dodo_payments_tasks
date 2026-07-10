@@ -1,0 +1,10 @@
+=== AUTHORIZED: reporting -> ledger-api ===
+{
+  "status": "ok"
+}
+
+HTTP_STATUS:200
+
+=== UNAUTHORIZED: persona-developer -> ledger-api ===
+RBAC: access denied
+HTTP_STATUS:403
